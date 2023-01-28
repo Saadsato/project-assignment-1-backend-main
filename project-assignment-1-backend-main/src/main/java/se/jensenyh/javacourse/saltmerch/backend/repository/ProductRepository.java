@@ -20,10 +20,14 @@ public class ProductRepository
 {
     @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    NamedParameterJdbcTemplate nPJT;
 
-    public ProductRepository(JdbcTemplate template) {
-        this.jdbcTemplate = template;
+    public ProductRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate nPJT) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.nPJT = nPJT;
     }
+
 
     private record VariantWImages(int id, String colorName, String imagesCsv) {}
 
@@ -48,7 +52,7 @@ public class ProductRepository
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("category", category);
-        return new NamedParameterJdbcTemplate(jdbcTemplate).query(sql, paramMap, rm);
+        return nPJT.query(sql, paramMap, rm);
     }
     public List<Product> selectAllOfCategory(String category) {
 
